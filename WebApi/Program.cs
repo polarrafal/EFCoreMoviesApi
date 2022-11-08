@@ -9,9 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseSqlServer("name=DefaultConnection", 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer("name=DefaultConnection",
         sqlServer => sqlServer.UseNetTopologySuite()));
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 #endregion
 
