@@ -8,7 +8,7 @@ namespace WebApi.Models.Entities
         public string Name { get; set; }
         public string Biography { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public virtual HashSet<MovieActor> MovieActors { get; set; }
+        public HashSet<MovieActor> MovieActors { get; set; }
 
         public static void SetupDbModel(ModelBuilder modelBuilder)
         {
