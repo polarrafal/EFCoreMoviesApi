@@ -9,6 +9,10 @@ namespace WebApi.Utilities
         public AutoMapperProfiles()
         {
             CreateMap<Actor, ActorDto>().ReverseMap();
+
+            CreateMap<Cinema, CinemaDto>()
+                .ForMember(dto => dto.Latitude, ent => ent.MapFrom(p => p.Location.Y))
+                .ForMember(dto => dto.Longitude, ent => ent.MapFrom(p => p.Location.X));
         }
     }
 }

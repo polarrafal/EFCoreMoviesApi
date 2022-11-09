@@ -1,8 +1,15 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using SharedApi.Dto;
+using WebApi.Constants;
 using WebApi.DAL;
 using WebApi.Models.Entities;
+using WebApi.Utilities;
 
 namespace WebApi.Controllers
 {
@@ -21,9 +28,35 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cinema>>> Get()
+        public async Task<ActionResult<IEnumerable<CinemaDto>>> Get(int page, int recordsToTake)
         {
-            return await _context.Cinemas.ToListAsync();
+            var result = await _context.Cinemas
+                .AsNoTracking()
+                .ProjectTo<CinemaDto>(_mapper.ConfigurationProvider)
+                .Paginate(page, recordsToTake)
+                .ToListAsync();
+
+            return result;
+        }
+
+        [HttpGet("closeToMe")]
+        public async Task<ActionResult> GetCloseToMe(double latitude, double longitude)
+        {
+            const int maxDistanceInMeters = 2000; // 2km
+
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: CoordinatesConstants.EarthSrid);
+            var myLocation = geometryFactory.CreatePoint(new Coordinate(latitude, longitude));
+            var cinemas = await _context.Cinemas
+                .OrderBy(c => c.Location.Distance(myLocation))
+                .Where(c => c.Location.IsWithinDistance(myLocation, maxDistanceInMeters))
+                .Select(c => new
+                {
+                    Name = c.Name,
+                    Distance = Math.Round(c.Location.Distance(myLocation))
+                })
+                .ToListAsync();
+
+            return Ok(cinemas);
         }
     }
 }

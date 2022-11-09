@@ -2,6 +2,7 @@
 using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using WebApi.Enums;
+using WebApi.Constants;
 
 // ReSharper disable IdentifierTypo
 
@@ -44,7 +45,7 @@ namespace WebApi.Models.Entities.Seeding
             // Seed Cinemas
             #region seedCinemas
 
-            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: CoordinatesConstants.EarthSrid);
 
             var agora = new Cinema { Id = 1, Name = "Agora Mall", Location = geometryFactory.CreatePoint(new Coordinate(-69.9388777, 18.4839233)) };
             var sambil = new Cinema { Id = 2, Name = "Sambil", Location = geometryFactory.CreatePoint(new Coordinate(-69.911582, 18.482455)) };
