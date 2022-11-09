@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using WebApi.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,12 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 #region AddServicesToContainer
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer("name=DefaultConnection",
-        sqlServer => sqlServer.UseNetTopologySuite()));
+{
+    options.UseLazyLoadingProxies();
+    options.UseSqlServer("name=DefaultConnection", sqlServer => sqlServer.UseNetTopologySuite());
+});
 
 builder.Services.AddAutoMapper(typeof(Program));
 

@@ -9,9 +9,9 @@ namespace WebApi.Models.Entities
         public bool InCinemas { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string PosterUrl { get; set; }
-        public HashSet<Genre> Genres { get; set; }
-        public HashSet<CinemaHall> CinemaHalls { get; set; }
-        public HashSet<MovieActor> MovieActors { get; set; }
+        public virtual HashSet<Genre> Genres { get; set; }
+        public virtual HashSet<CinemaHall> CinemaHalls { get; set; }
+        public virtual HashSet<MovieActor> MovieActors { get; set; }
 
         public static void SetupDbModel(ModelBuilder modelBuilder)
         {

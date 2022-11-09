@@ -10,7 +10,7 @@ namespace WebApi.Models.Entities
         public decimal DiscountPercentage { get; set; }
 
         public int CinemaId { get; set; }
-        public Cinema Cinema { get; set; }
+        public virtual Cinema Cinema { get; set; }
 
         public static void SetupDbModel(ModelBuilder modelBuilder)
         {

@@ -6,7 +6,7 @@ namespace WebApi.Models.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public HashSet<Movie> Movies { get; set; }
+        public virtual HashSet<Movie> Movies { get; set; }
 
         public static void SetupDbModel(ModelBuilder modelBuilder)
         {

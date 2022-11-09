@@ -10,9 +10,9 @@ namespace WebApi.Models.Entities
         public decimal Cost { get; set; }
 
         public int CinemaId { get; set; }
-        public Cinema Cinema { get; set; }
+        public virtual Cinema Cinema { get; set; }
 
-        public HashSet<Movie> Movies { get; set; }
+        public virtual HashSet<Movie> Movies { get; set; }
 
         public static void SetupDbModel(ModelBuilder modelBuilder)
         {
