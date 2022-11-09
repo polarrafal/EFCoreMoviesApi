@@ -41,5 +41,52 @@ namespace WebApi.Controllers
             movieDto.Cinemas = movieDto.Cinemas.DistinctBy(x => x.Id).ToList();
             return Ok(movieDto);
         }
+
+        [HttpGet("groupedByCinema")]
+        public async Task<ActionResult> GetGroupedByIsInCinema()
+        {
+            var groupedMovies = await _context.Movies
+                .GroupBy(m => m.InCinemas)
+                .Select(g => new
+                {
+                    InCinemas = g.Key,
+                    Count = g.Count(),
+                    Movies = g.ToList()
+                }).ToListAsync();
+
+            return Ok(groupedMovies);
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<MovieDto>>> Filter([FromQuery] MovieFilterDto movieFilterDto)
+        {
+            var moviesQueryable = _context.Movies.AsQueryable();
+
+            if (!string.IsNullOrEmpty(movieFilterDto.Title))
+            {
+                moviesQueryable = moviesQueryable.Where(m => m.Title.Contains(movieFilterDto.Title));
+            }
+
+            if (movieFilterDto.InCinemas)
+            {
+                moviesQueryable = moviesQueryable.Where(m => m.InCinemas);
+            }
+
+            if (movieFilterDto.UpcomingRelease)
+            {
+                var today = DateTime.Today;
+                moviesQueryable = moviesQueryable.Where(m => m.ReleaseDate > today);
+            }
+
+            if (movieFilterDto.GenreId != 0)
+            {
+                moviesQueryable = moviesQueryable.Where(m => m.Genres.Select(g => g.Id).Contains(movieFilterDto.GenreId));
+            }
+
+            var movies = await moviesQueryable.Include(m => m.Genres).ToListAsync();
+            var moviesDto = _mapper.Map<List<MovieDto>>(movies);
+
+            return Ok(moviesDto);
+        }
     }
 }
