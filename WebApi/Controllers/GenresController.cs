@@ -18,9 +18,12 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genre>>> Get(int page, int recordsToTake)
+        public async Task<ActionResult<IEnumerable<Genre>>> Get()
         {
-            var result = await _context.Genres.AsNoTracking().Paginate(page, recordsToTake).ToListAsync();
+            var result = await _context.Genres
+                .AsNoTracking()
+                .ToListAsync();
+
             return Ok(result);
         }
     }

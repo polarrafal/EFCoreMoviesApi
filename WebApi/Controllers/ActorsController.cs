@@ -22,13 +22,12 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ActorDto>>> Get(int page, int recordsToTake)
+        public async Task<ActionResult<IEnumerable<ActorDto>>> Get()
         {
             var result = await _context.Actors
                 .AsNoTracking()
                 .OrderBy(a => a.Name)
                 .ProjectTo<ActorDto>(_mapper.ConfigurationProvider)
-                .Paginate(page, recordsToTake)
                 .ToListAsync();
 
             return Ok(result);
